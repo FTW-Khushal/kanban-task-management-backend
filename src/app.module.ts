@@ -4,9 +4,11 @@ import { AppService } from './app.service';
 import { BoardsModule } from './boards/boards.module';
 import { ColumnsModule } from './columns/columns.module';
 import { DatabaseModule } from './database/database.module';
+import { TasksModule } from './tasks/tasks.module';
+import { SubtasksModule } from './subtasks/subtasks.module';
 
 @Module({
-  imports: [BoardsModule, ColumnsModule, DatabaseModule],
+  imports: [BoardsModule, ColumnsModule, DatabaseModule, TasksModule, SubtasksModule],
   controllers: [AppController],
   providers: [AppService],
 })
