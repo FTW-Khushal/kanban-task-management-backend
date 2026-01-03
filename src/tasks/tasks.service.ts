@@ -4,9 +4,9 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class TasksService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
-  create(createTaskDto: Prisma.tasksCreateInput) {
+  create(createTaskDto: Prisma.tasksUncheckedCreateInput) {
     return this.prismaService.tasks.create({
       data: createTaskDto,
     });

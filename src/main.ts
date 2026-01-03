@@ -9,7 +9,6 @@ async function bootstrap() {
     .setTitle('Kanban Task Management API')
     .setDescription('API documentation for the Kanban Task Management system')
     .setVersion('1.0')
-    .addTag('boards')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);

@@ -4,9 +4,9 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ColumnsService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
-  async create(createColumn: Prisma.columnsCreateInput) {
+  async create(createColumn: Prisma.columnsUncheckedCreateInput) {
     return this.prismaService.columns.create({
       data: createColumn,
     });

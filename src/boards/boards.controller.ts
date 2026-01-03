@@ -9,32 +9,40 @@ import {
   Post,
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
-import { boards, Prisma } from '@prisma/client';
+import { boards } from '@prisma/client';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateBoardDto } from './dto/create-board.dto';
+import { UpdateBoardDto } from './dto/update-board.dto';
 
+@ApiTags('boards')
 @Controller('boards')
 export class BoardsController {
-  constructor(private readonly boardsService: BoardsService) {}
+  constructor(private readonly boardsService: BoardsService) { }
 
   @Get()
+  @ApiOperation({ summary: 'Get all boards' })
   async getAllBoards(): Promise<boards[]> {
     return this.boardsService.getAllBoards();
   }
 
   @Post()
-  async createBoard(@Body() board: Prisma.boardsCreateInput): Promise<boards> {
-    return this.boardsService.createBoard(board);
+  @ApiOperation({ summary: 'Create a new board' })
+  async createBoard(@Body() createBoardDto: CreateBoardDto): Promise<boards> {
+    return this.boardsService.createBoard(createBoardDto);
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update a board by ID' })
   async updateBoard(
     @Param('id', ParseIntPipe) id: number,
-    @Body() data: Prisma.boardsUpdateInput,
+    @Body() updateBoardDto: UpdateBoardDto,
   ): Promise<boards> {
     console.log('Controller: Updating board with ID:', id);
-    return this.boardsService.updateBoard(id, data);
+    return this.boardsService.updateBoard(id, updateBoardDto);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a board by ID' })
   async deleteBoard(@Param('id') id: string): Promise<boards> {
     return this.boardsService.deleteBoard(Number(id));
   }

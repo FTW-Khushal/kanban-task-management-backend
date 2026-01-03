@@ -4,8 +4,8 @@ import { PrismaService } from 'src/database/prisma.service';
 
 @Injectable()
 export class SubtasksService {
-  constructor(private readonly prismaService: PrismaService) {}
-  create(createSubtaskDto: Prisma.subtasksCreateInput) {
+  constructor(private readonly prismaService: PrismaService) { }
+  create(createSubtaskDto: Prisma.subtasksUncheckedCreateInput) {
     return this.prismaService.subtasks.create({
       data: createSubtaskDto,
     });
