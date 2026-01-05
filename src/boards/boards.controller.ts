@@ -25,6 +25,12 @@ export class BoardsController {
     return this.boardsService.getAllBoards();
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Get a board by ID with all relations' })
+  async getBoard(@Param('id', ParseIntPipe) id: number): Promise<boards | null> {
+    return this.boardsService.findOne(id);
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create a new board' })
   async createBoard(@Body() createBoardDto: CreateBoardDto): Promise<boards> {

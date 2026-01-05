@@ -4,10 +4,47 @@ import { Prisma, boards } from '@prisma/client';
 
 @Injectable()
 export class BoardsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async getAllBoards(): Promise<boards[]> {
-    return this.prisma.boards.findMany();
+    return this.prisma.boards.findMany({
+      include: {
+        columns: {
+          include: {
+            tasks: {
+              include: {
+                subtasks: {
+                  orderBy: { id: 'asc' }
+                }
+              },
+              orderBy: { position: 'asc' }
+            }
+          },
+          orderBy: { id: 'asc' }
+        }
+      }
+    });
+  }
+
+  async findOne(id: number): Promise<boards | null> {
+    return this.prisma.boards.findUnique({
+      where: { id },
+      include: {
+        columns: {
+          include: {
+            tasks: {
+              include: {
+                subtasks: {
+                  orderBy: { id: 'asc' }
+                }
+              },
+              orderBy: { position: 'asc' }
+            }
+          },
+          orderBy: { id: 'asc' }
+        }
+      }
+    });
   }
 
   async createBoard(board: Prisma.boardsCreateInput): Promise<boards> {

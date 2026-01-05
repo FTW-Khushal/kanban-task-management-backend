@@ -14,6 +14,7 @@ import { tasks } from '@prisma/client';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { ReorderTaskDto } from './dto/reorder-task.dto';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -36,6 +37,16 @@ export class TasksController {
   @ApiOperation({ summary: 'Get a task by ID' })
   findOne(@Param('id') id: string) {
     return this.tasksService.findOne(+id);
+  }
+
+  @Patch('reorder')
+  @ApiOperation({ summary: 'Reorder a task' })
+  reorder(@Body() reorderTaskDto: ReorderTaskDto) {
+    return this.tasksService.reorder(
+      reorderTaskDto.taskId,
+      reorderTaskDto.targetColumnId,
+      reorderTaskDto.prevTaskId,
+    );
   }
 
   @Patch(':id')
