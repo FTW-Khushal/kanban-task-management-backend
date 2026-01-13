@@ -8,21 +8,7 @@ export class BoardsService {
 
   async getAllBoards(): Promise<boards[]> {
     return this.prisma.boards.findMany({
-      include: {
-        columns: {
-          include: {
-            tasks: {
-              include: {
-                subtasks: {
-                  orderBy: { id: 'asc' }
-                }
-              },
-              orderBy: { position: 'asc' }
-            }
-          },
-          orderBy: { id: 'asc' }
-        }
-      }
+      orderBy: { id: 'asc' }
     });
   }
 
