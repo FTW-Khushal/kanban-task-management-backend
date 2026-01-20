@@ -7,6 +7,11 @@ async function bootstrap() {
 
   app.enableCors({ origin: '*' });
 
+  app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+  });
+
   const config = new DocumentBuilder()
     .setTitle('Kanban Task Management API')
     .setDescription('API documentation for the Kanban Task Management system')

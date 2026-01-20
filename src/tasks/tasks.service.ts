@@ -94,11 +94,82 @@ export class TasksService {
     });
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
+  async update(id: number, updateTaskDto: UpdateTaskDto) {
     const { subtasks, ...data } = updateTaskDto;
-    return this.prismaService.tasks.update({
-      where: { id },
-      data: data,
+
+    // If no subtasks are provided, just update the task data
+    if (!subtasks) {
+      return this.prismaService.tasks.update({
+        where: { id },
+        data,
+        include: { subtasks: true },
+      });
+    }
+
+    return this.prismaService.$transaction(async (tx) => {
+      // 1. Update the parent task
+      await tx.tasks.update({
+        where: { id },
+        data,
+      });
+
+      // 2. Fetch existing subtasks to compare
+      const existingSubtasks = await tx.subtasks.findMany({
+        where: { task_id: id },
+        select: { id: true },
+      });
+      const existingIds = existingSubtasks.map((s) => s.id);
+
+      // 3. Identify subtasks to delete, create, and update
+      // Incoming subtasks that have an ID are updates
+      const incomingWithId = subtasks.filter((s) => s.id !== undefined && s.id !== null);
+      const incomingIds = incomingWithId.map((s) => s.id!);
+
+      // Delete: IDs in DB but not in payload
+      const toDelete = existingIds.filter((eid) => !incomingIds.includes(eid));
+
+      // Create: IDs not present in payload
+      const toCreate = subtasks.filter((s) => !s.id);
+
+      // Update: IDs present in both
+      const toUpdate = incomingWithId;
+
+      // 4. Execute Operations
+      if (toDelete.length > 0) {
+        await tx.subtasks.deleteMany({
+          where: {
+            id: { in: toDelete },
+            task_id: id, // Security check: ensure we only delete subtasks of this task
+          },
+        });
+      }
+
+      for (const s of toCreate) {
+        if (!s.title) continue; // Skip invalid new subtasks
+        await tx.subtasks.create({
+          data: {
+            title: s.title,
+            is_completed: s.is_completed ?? false,
+            task_id: id,
+          },
+        });
+      }
+
+      for (const s of toUpdate) {
+        await tx.subtasks.update({
+          where: { id: s.id },
+          data: {
+            title: s.title,
+            is_completed: s.is_completed,
+          },
+        });
+      }
+
+      // 5. Return full updated object
+      return tx.tasks.findUnique({
+        where: { id },
+        include: { subtasks: true },
+      });
     });
   }
 
