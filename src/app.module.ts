@@ -6,10 +6,11 @@ import { ColumnsModule } from './columns/columns.module';
 import { DatabaseModule } from './database/database.module';
 import { TasksModule } from './tasks/tasks.module';
 import { SubtasksModule } from './subtasks/subtasks.module';
+import { DatabaseResetModule } from './database-reset/database-reset.module';
 
 @Module({
-  imports: [BoardsModule, ColumnsModule, DatabaseModule, TasksModule, SubtasksModule],
+  imports: [BoardsModule, ColumnsModule, DatabaseModule, TasksModule, SubtasksModule, DatabaseResetModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
