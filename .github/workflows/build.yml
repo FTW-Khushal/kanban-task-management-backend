@@ -34,12 +34,12 @@ jobs:
     
     - name: Start services with Docker Compose
       run: |
-        docker-compose up -d
+        docker compose up -d
         sleep 10
     
     - name: Check service health
       run: |
-        docker-compose ps
+        docker compose ps
         curl -f http://localhost:3000/api || exit 1
     
     - name: Stop services
