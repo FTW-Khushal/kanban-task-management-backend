@@ -38,10 +38,20 @@ jobs:
         echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
         echo "POSTGRES_DB=$POSTGRES_DB" >> .env
         echo "PORT=$PORT" >> .env
+
+        # 3. Verify the file exists and check its content (excluding password)
+        if [ -f .env ]; then
+          echo ".env file created successfully."
+          echo "Content of .env:"
+          grep -v "PASSWORD" .env
+        else
+          echo ".env file creation failed."
+          exit 1
+        fi
       
     - name: Start services with Docker Compose
       run: |
-        docker compose -f docker-compose.yml up -d
+        docker compose --env-file .env -f docker-compose.yml up -d
         sleep 10
 
     - name: Debug PostgreSQL Logs
