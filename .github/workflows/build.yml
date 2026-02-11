@@ -80,10 +80,26 @@ jobs:
         echo "Testing API endpoint at http://localhost:$PORT/api"
         curl -f http://localhost:$PORT/api || exit 1
     
-    - name: Cleanup
-      if: always()
+    - name: Cleanup on failure
+      if: failure()
       run: |
-        echo "Stopping services..."
+        echo "Deployment failed, cleaning up..."
         docker compose down -v
-        echo "Removing .env file..."
         rm -f .env
+    
+    - name: Cleanup for PR builds
+      if: success() && github.event_name == 'pull_request'
+      run: |
+        echo "PR test passed, cleaning up test environment..."
+        docker compose down -v
+        rm -f .env
+    
+    - name: Deployment successful
+      if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        echo "✅ Deployment to main successful!"
+        echo "Services are running:"
+        docker compose ps
+        echo ""
+        echo "To view logs: docker compose logs -f"
+        echo "To stop: docker compose down"
