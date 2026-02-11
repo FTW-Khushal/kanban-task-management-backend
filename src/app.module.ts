@@ -7,9 +7,18 @@ import { DatabaseModule } from './database/database.module';
 import { TasksModule } from './tasks/tasks.module';
 import { SubtasksModule } from './subtasks/subtasks.module';
 import { DatabaseResetModule } from './database-reset/database-reset.module';
+import { LlmModule } from './llm/llm.module';
 
 @Module({
-  imports: [BoardsModule, ColumnsModule, DatabaseModule, TasksModule, SubtasksModule, DatabaseResetModule],
+  imports: [
+    BoardsModule,
+    ColumnsModule,
+    DatabaseModule,
+    TasksModule,
+    SubtasksModule,
+    DatabaseResetModule,
+    LlmModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
