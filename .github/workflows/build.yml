@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: debian-home-server
+    runs-on: self-hosted
     
     steps:
     - uses: actions/checkout@v3
