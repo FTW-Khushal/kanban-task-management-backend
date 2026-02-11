@@ -40,7 +40,7 @@ jobs:
 
     - name: Debug PostgreSQL Logs
       if: failure()
-      run: docker compose logs kanban-postgres
+      run: docker compose logs postgres
     
     - name: Check service health
       run: |
