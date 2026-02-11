@@ -27,6 +27,7 @@ jobs:
     
     - name: Create .env file from secrets
       run: |
+        touch .env
         echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
         echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
         echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
@@ -36,6 +37,10 @@ jobs:
       run: |
         docker compose -f docker-compose.yml up -d
         sleep 10
+
+    - name: Debug PostgreSQL Logs
+      if: failure()
+      run: docker compose logs kanban-postgres
     
     - name: Check service health
       run: |
