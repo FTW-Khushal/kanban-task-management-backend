@@ -1,4 +1,4 @@
-name: Build and Test Kanban Backend
+name: Build and Deploy Kanban Backend
 
 on:
   push:
