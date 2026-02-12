@@ -49,6 +49,7 @@ jobs:
         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         PORT: ${{ secrets.PORT }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
       run: |
         echo "The configured port is: $PORT"
         touch .env
