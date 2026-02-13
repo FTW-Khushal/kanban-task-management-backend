@@ -24,7 +24,7 @@ services:
       dockerfile: Dockerfile
     container_name: kanban-backend
     environment:
-      DATABASE_URL: ://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
       PORT: ${PORT}
       NODE_ENV: production
     ports:
