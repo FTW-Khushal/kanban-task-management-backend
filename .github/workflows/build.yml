@@ -79,8 +79,28 @@ jobs:
       run: |
         echo "Checking Docker Compose services..."
         docker compose ps
+        
+        # Wait for service to be healthy (max 60s)
+        echo "Waiting for backend service to be healthy..."
+        timeout=60
+        while [ $timeout -gt 0 ]; do
+            if docker compose ps --format json | grep -q '"Health":"healthy"'; then
+                echo "Service is healthy!"
+                break
+            fi
+            sleep 5
+            timeout=$((timeout - 5))
+            echo "Waiting... ($timeout seconds left)"
+        done
+
+        if [ $timeout -le 0 ]; then
+            echo "❌ Service failed to become healthy in time"
+            docker compose logs backend
+            exit 1
+        fi
+
         echo "Testing API endpoint at http://localhost:$PORT/api"
-        curl -f http://localhost:$PORT/api || exit 1
+        curl -v -f http://localhost:$PORT/api || exit 1
     
     - name: Cleanup on failure
       if: failure()
