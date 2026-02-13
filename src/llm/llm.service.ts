@@ -4,7 +4,7 @@ import { KANBAN_TOOLS } from './llm.constants';
 @Injectable()
 export class LlmService {
     private readonly logger = new Logger(LlmService.name);
-    private readonly llamaServerUrl = 'http://localhost:8001/v1/chat/completions';
+    private readonly llamaServerUrl = 'http://host.docker.internal:8001/v1/chat/completions';
 
     async checkLlamaServer(): Promise<boolean> {
         try {
