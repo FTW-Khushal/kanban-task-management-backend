@@ -7,7 +7,7 @@ import * as path from 'path';
 @Injectable()
 export class DatabaseResetService {
     private readonly logger = new Logger(DatabaseResetService.name);
-    private readonly seedDataPath = path.join(process.cwd(), 'src', 'data', 'seed-data.json');
+    private readonly seedDataPath = path.join(__dirname, '..', 'data', 'seed-data.json');
 
     constructor(private readonly prisma: PrismaService) { }
 
