@@ -33,11 +33,11 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "node", "-e", "require('http').get('http://localhost:3000/api', (r) => process.exit(r.statusCode === 200 ? 0 : 1))" ]
+      test: [ "CMD", "node", "-e", "require('http').get('http://localhost:3000/api', (r) => { if (r.statusCode !== 200) { console.error('Health check failed with status ' + r.statusCode); process.exit(1); } process.exit(0); }).on('error', (e) => { console.error(e); process.exit(1); })" ]
       interval: 10s
       timeout: 5s
-      retries: 3
-      start_period: 30s
+      retries: 5
+      start_period: 10s
 
 volumes:
   postgres_data:
