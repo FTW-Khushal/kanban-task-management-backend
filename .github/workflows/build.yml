@@ -49,7 +49,7 @@ jobs:
 
     - name: Start services with Docker Compose
       run: |
-        docker compose -f docker-compose.yml up -d --wait
+        docker compose -f docker-compose.yml up -d --build --wait
         echo "Services started successfully."
 
     - name: Check service health
